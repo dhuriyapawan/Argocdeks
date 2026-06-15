@@ -1,0 +1,47 @@
+# Local IDE and System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+crash.log
+
+# Node.js
+**/node_modules/
+**/dist/
+**/build/
+.npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.venv/
+**/venv/
+**/env/
+
+# Helm & Kubernetes
+**/charts/
+**/*.tgz
+kubeconfig
+.kube/
+
+# Environment configurations and secrets
+.env
+.env.*
+!*.example
+*secret*.yaml
+!repository-secret.yaml

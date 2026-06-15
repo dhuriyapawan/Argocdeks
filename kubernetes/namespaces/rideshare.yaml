@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rideshare
+  labels:
+    name: rideshare
+    istio-injection: enabled # Ready for Service Mesh if needed

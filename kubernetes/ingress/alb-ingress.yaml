@@ -1,0 +1,31 @@
+apiVersion: networks.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rideshare-alb-ingress
+  namespace: rideshare
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:123456789012:certificate/abc12345-6789-def0-1234-56789abcdef0
+spec:
+  rules:
+  - host: ridesharex.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port:
+              name: use-annotation
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: k8s-ingress-nginx-ingress-controller
+            port:
+              number: 80

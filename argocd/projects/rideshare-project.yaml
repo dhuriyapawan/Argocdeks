@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: rideshare-project
+  namespace: argocd
+spec:
+  description: "RideShareX Microservices Project"
+  sourceRepos:
+  - '*'
+  destinations:
+  - namespace: rideshare
+    server: https://kubernetes.default.svc
+  - namespace: monitoring
+    server: https://kubernetes.default.svc
+  - namespace: logging
+    server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'

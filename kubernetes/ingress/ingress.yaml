@@ -1,0 +1,68 @@
+apiVersion: networks.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rideshare-ingress
+  namespace: rideshare
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  tls:
+  - hosts:
+    - ridesharex.com
+    secretName: ridesharex-tls
+  rules:
+  - host: ridesharex.com
+    http:
+      paths:
+      - path: /api/auth(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 80
+      - path: /api/users(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80
+      - path: /api/rides(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: ride-service
+            port:
+              number: 80
+      - path: /api/drivers(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: driver-service
+            port:
+              number: 80
+      - path: /api/payments(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: payment-service
+            port:
+              number: 80
+      - path: /api/notifications(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 80
+      - path: /(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShareX Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="gradient-text">RideShareX</span>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active">Dashboard</a>
+                <a href="#" class="menu-item">Book a Ride</a>
+                <a href="#" class="menu-item">Driver Portal</a>
+                <a href="#" class="menu-item">Payments</a>
+                <a href="#" class="menu-item">Analytics</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">U</div>
+                    <div class="user-info">
+                        <span class="username">Alex Rider</span>
+                        <span class="user-role">Passenger</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Welcome back, <span class="gradient-text">Alex</span></h1>
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span>System Status: Optimal</span>
+                </div>
+            </header>
+
+            <section class="dashboard-grid">
+                <!-- Ride Booker Card -->
+                <div class="card glassmorphism booking-card">
+                    <h2>Request a Ride</h2>
+                    <form id="ride-form">
+                        <div class="input-group">
+                            <label>Pickup Location</label>
+                            <input type="text" placeholder="Enter pickup address" required value="Downtown Terminal">
+                        </div>
+                        <div class="input-group">
+                            <label>Dropoff Location</label>
+                            <input type="text" placeholder="Enter dropoff destination" required value="Airport Terminal 2">
+                        </div>
+                        <div class="input-group">
+                            <label>Ride Type</label>
+                            <select>
+                                <option>X-Standard (Fast & Economical)</option>
+                                <option>X-Premium (High-End Luxury)</option>
+                                <option>X-Electric (Eco-Friendly)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Find Drivers</button>
+                    </form>
+                </div>
+
+                <!-- Live Monitoring Map Card -->
+                <div class="card glassmorphism map-card">
+                    <div class="map-header">
+                        <h2>Live Operations Map</h2>
+                        <span class="badge">Active Drivers: 142</span>
+                    </div>
+                    <div class="mock-map">
+                        <div class="driver-pin pin-1"></div>
+                        <div class="driver-pin pin-2"></div>
+                        <div class="driver-pin pin-3"></div>
+                        <div class="user-pin"></div>
+                        <div class="map-path"></div>
+                    </div>
+                </div>
+
+                <!-- Service Health Monitoring -->
+                <div class="card glassmorphism health-card">
+                    <h2>Microservices Status</h2>
+                    <div class="service-list">
+                        <div class="service-item">
+                            <span>Auth Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                        <div class="service-item">
+                            <span>User Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                        <div class="service-item">
+                            <span>Ride Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                        <div class="service-item">
+                            <span>Driver Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                        <div class="service-item">
+                            <span>Payment Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                        <div class="service-item">
+                            <span>Notification Service</span>
+                            <span class="status-label status-healthy">Healthy</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

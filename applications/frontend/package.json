@@ -1,0 +1,14 @@
+{
+  "name": "ridesharex-frontend",
+  "version": "1.0.0",
+  "description": "RideShareX Web Client UI",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "serve src -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

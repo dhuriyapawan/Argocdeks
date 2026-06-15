@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: auth-service-app
+  namespace: argocd
+spec:
+  project: rideshare-project
+  source:
+    repoURL: https://github.com/your-org/ridesharex.git
+    targetRevision: HEAD
+    path: helm/auth-service
+    helm:
+      valueFiles:
+      - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: rideshare
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
