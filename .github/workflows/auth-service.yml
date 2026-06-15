@@ -2,6 +2,8 @@ name: Auth Service
 
 on:
   push:
+    branches:
+      - devops1
     paths:
       - 'auth-service/**'
 
@@ -39,4 +41,4 @@ jobs:
 
         run: |
           docker push \
-          YOUR_ECR_URL/auth-service:${{ github.sha }}
+          878445923420.dkr.ecr.us-east-1.amazonaws.com/rideshare/auth-service:${{ github.sha }}
