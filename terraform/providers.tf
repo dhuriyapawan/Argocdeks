@@ -1,7 +1,7 @@
 # terraform/providers.tf
 
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
 }
 
 # The Kubernetes provider configuration will dynamically reference EKS outputs.
