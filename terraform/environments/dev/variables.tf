@@ -48,6 +48,7 @@ variable "redis_auth_token" {
   type        = string
   description = "Authentication token for Redis cache cluster"
   sensitive   = true
+  default     = "authT0kenForRedis123!dev"
 }
 
 variable "domain_name" {
