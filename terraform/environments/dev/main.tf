@@ -48,8 +48,8 @@ module "iam" {
   source = "../../modules/iam"
 
   environment       = local.environment
-  oidc_provider_arn = module.eks.oidc_provider_arn
-  oidc_provider_url = module.eks.oidc_provider_url
+  # oidc_provider_arn = module.eks.oidc_provider_arn
+  # oidc_provider_url = module.eks.oidc_provider_url
   tags              = local.tags
 }
 
