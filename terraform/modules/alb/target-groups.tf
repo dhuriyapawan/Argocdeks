@@ -7,6 +7,10 @@ resource "aws_lb_target_group" "default_tg" {
   vpc_id      = var.vpc_id
   target_type = "instance"
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   health_check {
     enabled             = true
     healthy_threshold   = 3
