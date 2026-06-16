@@ -109,6 +109,7 @@ module "rds" {
   kms_key_arn         = module.kms.key_arn
   multi_az            = false
   skip_final_snapshot = true
+  create_db_subnet_group = false
   tags                = local.tags
 }
 

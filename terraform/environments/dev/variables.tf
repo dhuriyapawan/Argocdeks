@@ -34,7 +34,7 @@ variable "availability_zones" {
 
 variable "cluster_version" {
   type    = string
-  default = "1.29"
+  default = "1.33"
 }
 
 variable "db_password" {

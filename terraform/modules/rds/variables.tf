@@ -80,3 +80,7 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+variable "create_db_subnet_group" {
+  type    = bool
+  default = true
+}
