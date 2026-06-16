@@ -56,7 +56,9 @@ variable "domain_name" {
 }
 variable "db_username" {
   type = string
+  default = "postgres"
 }
 variable "db_name" {
   type = string
+  default = "rideshare"
 }
