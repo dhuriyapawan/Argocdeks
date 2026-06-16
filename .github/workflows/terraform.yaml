@@ -123,7 +123,10 @@ jobs:
             terraform import module.redis.aws_elasticache_subnet_group.redis dev-redis-subnet-group || true
 
           echo "Import completed."
-
+      - run: terraform destroy -auto-approve
+        env:
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_redis_auth_token: ${{ secrets.REDIS_AUTH_TOKEN }}
       - run: terraform validate
 
       - run: terraform plan
