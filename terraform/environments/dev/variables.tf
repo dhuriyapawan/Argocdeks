@@ -55,10 +55,10 @@ variable "domain_name" {
   default     = "ridesharex.local"
 }
 variable "db_username" {
-  type = string
+  type    = string
   default = "postgres"
 }
 variable "db_name" {
-  type = string
+  type    = string
   default = "rideshare"
 }
