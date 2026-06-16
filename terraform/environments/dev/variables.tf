@@ -54,3 +54,9 @@ variable "domain_name" {
   description = "Main domain name for Route53 mapping"
   default     = "ridesharex.local"
 }
+variable "db_username" {
+  type = string
+}
+variable "db_name" {
+  type = string
+}
