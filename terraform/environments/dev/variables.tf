@@ -41,6 +41,7 @@ variable "db_password" {
   type        = string
   description = "Master password for PostgreSQL database"
   sensitive   = true
+  default     = "p@ssW0rd123!dev"
 }
 
 variable "redis_auth_token" {
