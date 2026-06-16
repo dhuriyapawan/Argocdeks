@@ -10,12 +10,12 @@ output "eks_node_role_arn" {
   value       = aws_iam_role.eks_nodes.arn
 }
 
-output "aws_lb_controller_role_arn" {
-  description = "AWS Load Balancer Controller IAM Role ARN"
-  value       = aws_iam_role.aws_lb_controller.arn
-}
+# output "aws_lb_controller_role_arn" {
+#   description = "AWS Load Balancer Controller IAM Role ARN"
+#   value       = aws_iam_role.aws_lb_controller.arn
+# }
 
-output "karpenter_role_arn" {
-  description = "Karpenter Controller IAM Role ARN"
-  value       = aws_iam_role.karpenter.arn
-}
+# output "karpenter_role_arn" {
+#   description = "Karpenter Controller IAM Role ARN"
+#   value       = aws_iam_role.karpenter.arn
+# }
