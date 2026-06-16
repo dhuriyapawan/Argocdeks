@@ -11,7 +11,7 @@ resource "aws_db_instance" "postgres" {
   username                    = var.username
   password                    = var.password
   port                        = 5432
-  db_subnet_group_name        = aws_db_subnet_group.db_subnets.name
+  db_subnet_group_name        = aws_db_subnet_group.db_subnets[count.index]
   parameter_group_name        = aws_db_parameter_group.pg.name
   vpc_security_group_ids      = [var.security_group_id]
   storage_encrypted           = true
