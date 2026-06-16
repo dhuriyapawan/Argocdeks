@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - devops1
-    # paths:
-    #   - 'terraform/**'
 
 jobs:
   terraform:
@@ -32,14 +30,108 @@ jobs:
 
       - run: terraform init
 
+      - name: Import Existing Resources
+        shell: bash
+        run: |
+          set +e
+
+          echo "Importing existing AWS resources..."
+
+          # ALB
+          ALB_ARN=$(aws elbv2 describe-load-balancers \
+            --names dev-alb \
+            --query 'LoadBalancers[0].LoadBalancerArn' \
+            --output text 2>/dev/null)
+
+          [ -n "$ALB_ARN" ] && [ "$ALB_ARN" != "None" ] && \
+            terraform import module.alb.aws_lb.main "$ALB_ARN" || true
+
+          # Target Group
+          TG_ARN=$(aws elbv2 describe-target-groups \
+            --names dev-default-tg \
+            --query 'TargetGroups[0].TargetGroupArn' \
+            --output text 2>/dev/null)
+
+          [ -n "$TG_ARN" ] && [ "$TG_ARN" != "None" ] && \
+            terraform import module.alb.aws_lb_target_group.default_tg "$TG_ARN" || true
+
+          # ECR Repositories
+          repos=(
+            "dev/frontend"
+            "dev/auth-service"
+            "dev/user-service"
+            "dev/ride-service"
+            "dev/driver-service"
+            "dev/payment-service"
+            "dev/notification-service"
+          )
+
+          for i in "${!repos[@]}"; do
+            aws ecr describe-repositories \
+              --repository-names "${repos[$i]}" >/dev/null 2>&1
+
+            if [ $? -eq 0 ]; then
+              terraform import \
+                "module.ecr.aws_ecr_repository.repo[$i]" \
+                "${repos[$i]}" || true
+            fi
+          done
+
+          # IAM Roles
+          aws iam get-role --role-name dev-eks-cluster-role >/dev/null 2>&1 && \
+            terraform import module.iam.aws_iam_role.eks_cluster dev-eks-cluster-role || true
+
+          aws iam get-role --role-name dev-eks-node-role >/dev/null 2>&1 && \
+            terraform import module.iam.aws_iam_role.eks_nodes dev-eks-node-role || true
+
+          ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+          # IAM Policies
+          aws iam get-policy \
+            --policy-arn arn:aws:iam::$ACCOUNT_ID:policy/dev-aws-lb-controller-policy \
+            >/dev/null 2>&1 && \
+            terraform import \
+            module.iam.aws_iam_policy.aws_lb_controller \
+            arn:aws:iam::$ACCOUNT_ID:policy/dev-aws-lb-controller-policy || true
+
+          aws iam get-policy \
+            --policy-arn arn:aws:iam::$ACCOUNT_ID:policy/dev-karpenter-policy \
+            >/dev/null 2>&1 && \
+            terraform import \
+            module.iam.aws_iam_policy.karpenter \
+            arn:aws:iam::$ACCOUNT_ID:policy/dev-karpenter-policy || true
+
+          # KMS Alias
+          aws kms list-aliases \
+            --query "Aliases[?AliasName=='alias/dev-key'].AliasName" \
+            --output text | grep -q "alias/dev-key" && \
+            terraform import module.kms.aws_kms_alias.main alias/dev-key || true
+
+          # RDS Parameter Group
+          aws rds describe-db-parameter-groups \
+            --db-parameter-group-name dev-postgres15-pg >/dev/null 2>&1 && \
+            terraform import module.rds.aws_db_parameter_group.pg dev-postgres15-pg || true
+
+          # RDS Subnet Group
+          aws rds describe-db-subnet-groups \
+            --db-subnet-group-name dev-rds-subnet-group >/dev/null 2>&1 && \
+            terraform import module.rds.aws_db_subnet_group.db_subnets dev-rds-subnet-group || true
+
+          # Redis Subnet Group
+          aws elasticache describe-cache-subnet-groups \
+            --cache-subnet-group-name dev-redis-subnet-group >/dev/null 2>&1 && \
+            terraform import module.redis.aws_elasticache_subnet_group.redis dev-redis-subnet-group || true
+
+          echo "Import completed."
+
       - run: terraform validate
 
       - run: terraform plan
         env:
-         TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
-         TF_VAR_redis_auth_token: ${{ secrets.REDIS_AUTH_TOKEN }}
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_redis_auth_token: ${{ secrets.REDIS_AUTH_TOKEN }}
 
       - run: terraform apply -auto-approve
         env:
-         TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
-         TF_VAR_redis_auth_token: ${{ secrets.REDIS_AUTH_TOKEN }}
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_redis_auth_token: ${{ secrets.REDIS_AUTH_TOKEN }}
