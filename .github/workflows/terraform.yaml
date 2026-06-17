@@ -122,7 +122,8 @@ jobs:
             --cache-subnet-group-name dev-redis-subnet-group >/dev/null 2>&1 && \
             terraform import module.redis.aws_elasticache_subnet_group.redis dev-redis-subnet-group || true
           # 
-
+          terraform import module.vpc.aws_vpc.main vpc-0c1bec9f7feecffdd
+          terraform import 'module.vpc.aws_eip.nat[0]' eipalloc-0e6e394ec927771ef
            echo "Import completed."
       # - run: terraform destroy -auto-approve
       #   env:
