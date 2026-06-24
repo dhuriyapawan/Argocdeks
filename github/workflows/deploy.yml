@@ -2,8 +2,7 @@
 
 on:
   push:
-    branches:
-      - devops2 
+    branches: [devops2]
 
 env:
   AWS_REGION: us-east-1
