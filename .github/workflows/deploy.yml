@@ -37,11 +37,11 @@ jobs:
 
     - name: Push
       run: |
-        docker push $ECR_REPOSITORY:latest \
-        ${{ secrets.ECR_URI }}:${{ github.sha }}
+        docker tag $ECR_REPOSITORY:latest \
+        ${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
 
         docker push \
-        ${{ secrets.ECR_URI }}:${{ github.sha }}
+        ${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
 
     - name: Update Helm
       run: |
