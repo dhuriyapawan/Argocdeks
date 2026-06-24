@@ -1,8 +1,9 @@
-# github actions workflowname: Deploy
+name: Deploy
 
 on:
   push:
-    branches: [devops2]
+    branches:
+      - devops2
 
 env:
   AWS_REGION: us-east-1
@@ -10,52 +11,45 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
 
     permissions:
       id-token: write
       contents: write
 
     steps:
+      - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
-    - uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
 
-    - uses: aws-actions/amazon-ecr-login@v2
+      - name: Build Image
+        run: |
+          docker build \
+            -f docker/Dockerfile \
+            -t $ECR_REPOSITORY:${{ github.sha }} \
+            .
 
-    - name: Build
-      run: |
-        docker build \
-           -f docker/Dockerfile \
-           -t $ECR_REPOSITORY:${GITHUB_SHA} \
-           .
+      - name: Push Image
+        run: |
+          docker push $ECR_REPOSITORY:${{ github.sha }}
 
-    - name: Push
-      run: |
-        docker tag $ECR_REPOSITORY:latest \
-        ${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+      - name: Update Helm
+        run: |
+          sed -i "s|tag:.*|tag: \"${{ github.sha }}\"|" helm/apple-site/values.yaml
 
-        docker push \
-        ${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+      - name: Commit Changes
+        run: |
+          git config user.email "github@actions.com"
+          git config user.name "github-actions"
 
-    - name: Update Helm
-      run: |
-        sed -i \
-        "s/tag:.*/tag: ${{ github.sha }}/" \
-        helm/apple-site/values.yaml
+          git add helm/apple-site/values.yaml
 
-    - name: Commit
-      run: |
-        git config user.email "github@actions.com"
-        git config user.name "github-actions"
+          git diff --cached --quiet || git commit -m "Update image tag ${{ github.sha }}"
 
-        git add .
-
-        git commit -m "update image"
-
-        git push
+          git push
