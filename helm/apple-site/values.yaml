@@ -1,3 +1,10 @@
+image:
+  repository: 878445923420.dkr.ecr.us-east-1.amazonaws.com/eksapple
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 2
+
 service:
   port: 80
 
@@ -11,3 +18,7 @@ ingress:
 
   healthCheckPath: /
   successCodes: "200"
+containers:
+  - name: apple-site
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    imagePullPolicy: {{ .Values.image.pullPolicy }}

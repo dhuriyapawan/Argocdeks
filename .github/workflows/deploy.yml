@@ -45,8 +45,8 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git config user.email "github@actions.com"
-          git config user.name "github-actions"
+          git config user.email "dhuriya.pawan@gmail.com"
+          git config user.name "Pawan Dhuriya"
 
           git add helm/apple-site/values.yaml
 
