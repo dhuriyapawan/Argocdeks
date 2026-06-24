@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: {{ include "apple-site.fullname" . }}
+  labels:
+    {{- include "apple-site.labels" . | nindent 4 }}
+
+spec:
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+  - port: {{ .Values.service.port }}
+    targetPort: 80
+  type: ClusterIP

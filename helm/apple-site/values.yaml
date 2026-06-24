@@ -1,0 +1,13 @@
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  className: alb
+  host: app.example.com
+
+  scheme: internet-facing
+  targetType: ip
+
+  healthCheckPath: /
+  successCodes: "200"
