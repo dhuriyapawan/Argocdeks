@@ -1,6 +1,6 @@
 image:
   repository: 878445923420.dkr.ecr.us-east-1.amazonaws.com/eksapple
-  tag: latest
+  tag: "fe327d7630d2caf9f2d9b9e03718062a0c7d9bb7"
   pullPolicy: Always
 
 replicaCount: 2
@@ -12,13 +12,7 @@ ingress:
   enabled: true
   className: alb
   host: app.example.com
-
   scheme: internet-facing
   targetType: ip
-
   healthCheckPath: /
   successCodes: "200"
-containers:
-  - name: apple-site
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-    imagePullPolicy: {{ .Values.image.pullPolicy }}
