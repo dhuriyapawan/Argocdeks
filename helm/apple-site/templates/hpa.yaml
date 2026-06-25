@@ -4,7 +4,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "apple-site.fullname" . }}-hpa
   labels:
-    {{ include "apple-site.labels" . | nindent 4 }}
+    {{- include "apple-site.labels" . | nindent 4 }}
 
 spec:
   scaleTargetRef:
