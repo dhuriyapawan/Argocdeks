@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: 878445923420.dkr.ecr.us-east-1.amazonaws.com/eksapple
-  tag: latest
+  tag: "9b05ebcfdbca4a28883b8e544ac5768c54e9d876"
   pullPolicy: Always
 
 service:
