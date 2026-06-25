@@ -1,29 +1,29 @@
-# {{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
-
 metadata:
   name: {{ include "apple-site.fullname" . }}
   labels:
-    # {{- include "apple-site.labels" . | nindent 4 }}
+    {{- include "apple-site.labels" . | nindent 4 }}
   annotations:
-    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme | quote }}
-    alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.targetType | quote }}
+    alb.ingress.kubernetes.io/scheme: {{ default "internet-facing" .Values.ingress.scheme | quote }}
+    alb.ingress.kubernetes.io/target-type: {{ default "ip" .Values.ingress.targetType | quote }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
-    alb.ingress.kubernetes.io/healthcheck-path: {{ .Values.ingress.healthCheckPath | quote }}
-    alb.ingress.kubernetes.io/success-codes: {{ .Values.ingress.successCodes | quote }}
+    alb.ingress.kubernetes.io/healthcheck-path: {{ default "/" .Values.ingress.healthCheckPath | quote }}
+    alb.ingress.kubernetes.io/success-codes: {{ default "200" .Values.ingress.successCodes | quote }}
 
 spec:
-  ingressClassName: {{ .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
+
   rules:
-  - host: {{ .Values.ingress.host | quote }}
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ include "apple-site.fullname" . }}
-            port:
-              number: {{ .Values.service.port }}
-# {{- end }}
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "apple-site.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}
