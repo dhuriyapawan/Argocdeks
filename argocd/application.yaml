@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/dhuriyapawan/Argocdeks.git
 
-    targetRevision: main
+    targetRevision: devops2
 
     path: helm/apple-site
 
