@@ -29,6 +29,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Validate ECR repository
+        run: |
+          if [ -z "${{ secrets.ECR_REPOSITORY }}" ]; then
+            echo "Error: ECR_REPOSITORY secret is not set."
+            echo "Set ECR_REPOSITORY to your ECR repository name in GitHub Secrets."
+            exit 1
+          fi
+        shell: bash
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
