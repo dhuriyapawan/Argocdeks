@@ -1,26 +1,28 @@
-name: Build and push backend image to ECR
+name: Build and Push Backend Image to Amazon ECR
 
 on:
   push:
-    branches: 
-            - devops3
+    branches:
+      - devops3
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: blogpost
 
 jobs:
   build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
-      packages: write
-    env:
-      AWS_REGION: us-east-1
-      ECR_REPOSITORY: 878445923420.dkr.ecr.us-east-1.amazonaws.com/blogpost
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -28,31 +30,29 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Validate ECR repository
-        run: |
-          if [ -z "${{ env.ECR_REPOSITORY }}" ]; then
-            echo "Error: ECR_REPOSITORY secret is not set."
-            echo "Set ECR_REPOSITORY to your ECR repository name in GitHub Secrets."
-            exit 1
-          fi
-        shell: bash
-
-      - name: Setup Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        with:
-          install: true
-          driver-opts: |
-            network=host
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/Dockerfile
-          platforms: linux/amd64,linux/arm64
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
             ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Image Details
+        run: |
+          echo "Image pushed successfully!"
+          echo "Latest:"
+          echo "${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest"
+          echo ""
+          echo "Commit Tag:"
+          echo "${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
