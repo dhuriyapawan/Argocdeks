@@ -1,0 +1,13 @@
+apiVersion: v2
+name: blogpost
+description: A Helm chart for deploying the blog platform with MongoDB
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - blog
+  - nodejs
+  - mongodb
+maintainers:
+  - name: DevOps Team
+    email: devops@example.com

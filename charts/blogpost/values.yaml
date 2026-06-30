@@ -1,0 +1,32 @@
+replicaCount: 2
+
+image:
+  repository: 878445923420.dkr.ecr.us-east-1.amazonaws.com/blogpost
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5000
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+mongodb:
+  enabled: true
+  username: bloguser
+  password: blogpassword
+  database: blogplatform
+  replicas: 1
+  storage:
+    size: 10Gi
+
+env:
+  NODE_ENV: production
+  PORT: "5000"

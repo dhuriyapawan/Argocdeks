@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: blogpost
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/dhuriyapawan/Argocdeks.git
+    targetRevision: devops3
+    path: charts/blogpost
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  info:
+  - name: 'Documentation'
+    value: 'https://github.com/dhuriyapawan/Argocdeks'
