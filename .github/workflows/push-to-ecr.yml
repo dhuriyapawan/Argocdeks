@@ -13,6 +13,7 @@ jobs:
       packages: write
     env:
       AWS_REGION: us-east-1
+      ECR_REPOSITORY: 878445923420.dkr.ecr.us-east-1.amazonaws.com/blogpost
 
     steps:
       - name: Checkout repository
@@ -31,7 +32,7 @@ jobs:
 
       - name: Validate ECR repository
         run: |
-          if [ -z "${{ secrets.ECR_REPOSITORY }}" ]; then
+          if [ -z "${{ env.ECR_REPOSITORY }}" ]; then
             echo "Error: ECR_REPOSITORY secret is not set."
             echo "Set ECR_REPOSITORY to your ECR repository name in GitHub Secrets."
             exit 1
