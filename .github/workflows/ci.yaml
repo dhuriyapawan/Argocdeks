@@ -3,14 +3,13 @@ name: CI
 on:
   push:
     branches: 
-      devops5
+      - devops5
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-  env:
-    ECR_REGISTRY: login-app
-
+    env:
+      ECR_REGISTRY: login-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,3 +33,4 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+ 
