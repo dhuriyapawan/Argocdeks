@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: read 
 
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,5 +42,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f auth-service/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest auth-service
+          
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:latest

@@ -1,24 +1,50 @@
+const API_BASE_URLS = [
+    '/api',
+    'http://127.0.0.1:3000/api',
+    'http://localhost:3000/api',
+    'http://127.0.0.1:5000/api',
+    'http://localhost:5000/api'
+];
+
+async function callAuthApi(path, options = {}) {
+    let lastError;
+
+    for (const baseUrl of API_BASE_URLS) {
+        try {
+            const response = await fetch(`${baseUrl}${path}`, options);
+            const data = await response.json().catch(() => ({}));
+
+            if (response.ok || response.status >= 400) {
+                return { response, data };
+            }
+        } catch (error) {
+            lastError = error;
+        }
+    }
+
+    throw lastError || new Error('Unable to reach auth service');
+}
+
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    
+
     try {
-        const response = await fetch('/api/auth/login', {
+        const { response, data } = await callAuthApi('/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ email, password })
         });
-        
-        if (response.ok) {
-            const data = await response.json();
+
+        if (response.ok && data.token) {
             localStorage.setItem('token', data.token);
             window.location.href = '/dashboard.html';
         } else {
-            alert('Login failed. Please check your credentials.');
+            alert(data.message || 'Login failed. Please check your credentials.');
         }
     } catch (error) {
         console.error('Error:', error);
