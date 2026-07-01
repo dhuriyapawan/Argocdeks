@@ -2,8 +2,8 @@ name: CI
 
 on:
   push:
-    branches:
-      - devops5
+    branches: 
+      devops5
 
 jobs:
   build-and-push:
