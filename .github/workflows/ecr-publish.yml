@@ -31,17 +31,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION || env.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
+      - name: Log in to Amazon ECR 
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push Docker image
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}        docker compose up --build        docker compose up --build
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ env.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f auth-service/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest auth-service
-
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           docker push $REGISTRY/$REPOSITORY:latest
