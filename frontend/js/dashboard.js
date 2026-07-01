@@ -14,9 +14,15 @@ async function callAuthApi(path, options = {}) {
             const response = await fetch(`${baseUrl}${path}`, options);
             const data = await response.json().catch(() => ({}));
 
-            if (response.ok || response.status >= 400) {
+            if (response.ok) {
                 return { response, data };
             }
+
+            if (baseUrl === '/api' && response.status === 501) {
+                continue;
+            }
+
+            return { response, data };
         } catch (error) {
             lastError = error;
         }

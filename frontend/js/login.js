@@ -14,9 +14,17 @@ async function callAuthApi(path, options = {}) {
             const response = await fetch(`${baseUrl}${path}`, options);
             const data = await response.json().catch(() => ({}));
 
-            if (response.ok || response.status >= 400) {
+            if (response.ok) {
                 return { response, data };
             }
+
+            // If the local static server is serving the page, it will reject POST /api with 501.
+            // In that case, try the backend host URLs before failing completely.
+            if (baseUrl === '/api' && response.status === 501) {
+                continue;
+            }
+
+            return { response, data };
         } catch (error) {
             lastError = error;
         }
