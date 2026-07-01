@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: auth_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: auth_user
+      MYSQL_PASSWORD: auth_password
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - auth-network
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth_service
+    environment:
+      DB_HOST: database
+      DB_USER: auth_user
+      DB_PASSWORD: auth_password
+      DB_NAME: auth_db
+      PORT: 3000
+      JWT_SECRET: your-secret-key-here
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    networks:
+      - auth-network
+
+  frontend:
+    build: ./frontend
+    container_name: auth_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+    networks:
+      - auth-network
+
+volumes:
+  mysql_data:
+
+networks:
+  auth-network:
+    driver: bridge
