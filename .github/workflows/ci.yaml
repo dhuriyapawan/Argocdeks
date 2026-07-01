@@ -9,7 +9,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     env:
-      ECR_REGISTRY: login-app
+      ECR_REGISTRY: loginfrontpage
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
