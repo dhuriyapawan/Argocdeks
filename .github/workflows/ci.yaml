@@ -41,7 +41,7 @@ jobs:
 
       - name: Update Helm values.yaml
         run: |
-          sed -i "s/tag:.*/tag: \"${{ github.sha }}\"/" charts/login-app/values.yaml
+          sed -i "s/tag:.*/tag: \"${{ github.sha }}\"/" charts/values.yaml
 
       - name: Commit Helm Change
         run: |
