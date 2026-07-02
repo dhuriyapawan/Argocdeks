@@ -1,36 +1,55 @@
-name: CI
+name: Build and Push to ECR
 
 on:
   push:
-    branches: 
+    branches:
       - devops5
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
+
     env:
-      ECR_REGISTRY: loginfrontpage
+      AWS_REGION: us-east-1
+      ECR_REPOSITORY: loginfrontpage
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: loginfrontpage
-          IMAGE_TAG: ${{ github.sha }}
+      - name: Build Docker Image
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-           
+          docker build -t ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Update Helm values.yaml
+        run: |
+          sed -i "s/tag:.*/tag: \"${{ github.sha }}\"/" charts/login-app/values.yaml
+
+      - name: Commit Helm Change
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add charts/login-app/values.yaml
+
+          git diff --cached --quiet || git commit -m "Update image tag to ${{ github.sha }}"
+
+          git push

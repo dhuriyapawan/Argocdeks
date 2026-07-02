@@ -1,0 +1,10 @@
+image:
+  repository: 878445923420.dkr.ecr.us-east-1.amazonaws.com/loginfrontpage
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+
+replicaCount: 2
