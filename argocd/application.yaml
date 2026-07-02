@@ -5,11 +5,11 @@ metadata:
   namespace: argocd
 
 spec:
-  project: default
+  project: login
 
   source:
     repoURL: https://github.com/dhuriyapawan/Argocdeks.git
-    targetRevision: HEAD
+    targetRevision: devops5
     path: charts/login-app
 
   destination:
@@ -20,3 +20,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+  syncOptions:
+      - CreateNamespace=true
