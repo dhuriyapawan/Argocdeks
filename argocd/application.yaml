@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/dhuriyapawan/Argocdeks.git
     targetRevision: devops5
-    path: charts/login-app
+    path: charts
 
   destination:
     server: https://kubernetes.default.svc
