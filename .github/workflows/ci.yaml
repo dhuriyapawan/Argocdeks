@@ -48,7 +48,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add charts/login-app/values.yaml
+          git add charts/values.yaml
 
           git diff --cached --quiet || git commit -m "Update image tag to ${{ github.sha }}"
 
